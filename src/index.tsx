@@ -30,22 +30,41 @@ const treeData: TreeData = [
   {
     key: "1",
     title: "1",
+    children: [
+      {
+        key: "1-0",
+        title: "1-0",
+      },
+    ],
   },
 ]
 
 const Index = () => {
-  const [keysInput, setKeysInput] = useState("0 0-1-0 0-2")
+  const [selectedKeysInput, setSelectedKeysInput] = useState("0 0-1-0 1")
+  const [expandedKeysInput, setExpandedKeysInput] = useState("0 0-1")
   return (
     <div>
       Tree Component
       <hr />
       <h1>输入要被选中的key</h1>
       <input
-        value={keysInput}
-        onChange={(e) => setKeysInput(e.target.value)}
+        value={selectedKeysInput}
+        onChange={(e) => setSelectedKeysInput(e.target.value)}
         type="text"
       />
-      <Tree selectedKeys={keysInput.split(" ")} data={treeData} />
+      <h1>输入要被展开的key</h1>
+      <input
+        value={expandedKeysInput}
+        onChange={(e) => {
+          setExpandedKeysInput(e.target.value)
+        }}
+        type="text"
+      />
+      <Tree
+        defaultExpandedKeys={expandedKeysInput.split(" ")}
+        defaultSelectedKeys={selectedKeysInput.split(" ")}
+        data={treeData}
+      />
     </div>
   )
 }

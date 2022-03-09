@@ -1,20 +1,33 @@
-import React from "react"
-
+import React, { useState } from "react"
+import classnames from "classnames"
 type TreeData = NodeData[]
 
 interface TreeProps {
   data: TreeData
   selectedKeys?: string[]
+  expandedKeys?: string[]
+  defaultExpandedKeys?: string[]
+  defaultSelectedKeys?: string[]
 }
 
-function Tree({ data = [], selectedKeys }: TreeProps) {
+function Tree({
+  data = [],
+  selectedKeys,
+  expandedKeys,
+  defaultExpandedKeys = [],
+  defaultSelectedKeys = [],
+}: TreeProps) {
+  selectedKeys = [...defaultSelectedKeys]
+  expandedKeys = [...defaultExpandedKeys]
+
   return (
     <div className="tree">
       {data.map((nodeData) => (
         <TreeNode
-          selectedKeys={selectedKeys}
           key={nodeData.key}
           data={nodeData}
+          selectedKeys={selectedKeys}
+          expandedKeys={expandedKeys}
         />
       ))}
     </div>
@@ -30,19 +43,49 @@ interface NodeData {
 interface TreeNodeProps {
   data: NodeData
   selectedKeys: string[]
+  expandedKeys: string[]
 }
 
-function TreeNode({ data, selectedKeys }: TreeNodeProps) {
+function TreeNode({ data, selectedKeys, expandedKeys }: TreeNodeProps) {
   const hasChildren = data.children?.length ? true : false
-  return (
-    <div>
-      {selectedKeys?.includes(data.key) ? (
-        <span style={{ background: "red" }}>{data.title}</span>
-      ) : (
-        <span>{data.title}</span>
-      )}
+  const [expanded, setExpanded] = useState(expandedKeys?.includes(data.key))
+  const [selected, setSelected] = useState(selectedKeys?.includes(data.key))
 
-      {hasChildren && <Tree selectedKeys={selectedKeys} data={data.children} />}
+  const onExpand = () => {
+    setExpanded(!expanded)
+  }
+
+  const onSelect = () => {
+    setSelected(!selected)
+  }
+
+  return (
+    <div className="tree-node">
+      <div className="content">
+        {hasChildren && (
+          <div onClick={onExpand} className="switcher">
+            {expanded ? "-" : "+"}
+          </div>
+        )}
+        <div
+          onClick={onSelect}
+          className={classnames("title", {
+            active: selected,
+          })}
+        >
+          {data.title}
+        </div>
+      </div>
+      {hasChildren &&
+        expanded &&
+        data.children.map((nodeData) => (
+          <TreeNode
+            data={nodeData}
+            key={nodeData.key}
+            selectedKeys={selectedKeys}
+            expandedKeys={expandedKeys}
+          />
+        ))}
     </div>
   )
 }

@@ -1,3 +1,22 @@
 .tree {
-  padding-left: 1em;
+  .tree-node {
+    padding-left: 1em;
+
+    .content {
+      display: flex;
+
+      .switcher {
+        cursor: pointer;
+      }
+
+      & > div {
+        margin-right: 0.5em;
+      }
+    }
+  }
+  .title {
+    &.active {
+      color: red;
+    }
+  }
 }
