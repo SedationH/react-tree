@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import ReactDOM from "react-dom"
 import Tree, { TreeData } from "./Tree"
 
@@ -34,10 +34,18 @@ const treeData: TreeData = [
 ]
 
 const Index = () => {
+  const [keysInput, setKeysInput] = useState("0 0-1-0 0-2")
   return (
     <div>
       Tree Component
-      <Tree data={treeData} />
+      <hr />
+      <h1>输入要被选中的key</h1>
+      <input
+        value={keysInput}
+        onChange={(e) => setKeysInput(e.target.value)}
+        type="text"
+      />
+      <Tree selectedKeys={keysInput.split(" ")} data={treeData} />
     </div>
   )
 }
