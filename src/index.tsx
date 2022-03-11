@@ -46,13 +46,13 @@ const Index = () => {
     <div>
       Tree Component
       <hr />
-      <h1>输入要被选中的key</h1>
+      <h1>输入要默认被选中的key</h1>
       <input
         value={selectedKeysInput}
         onChange={(e) => setSelectedKeysInput(e.target.value)}
         type="text"
       />
-      <h1>输入要被展开的key</h1>
+      <h1>输入要默认被展开的key</h1>
       <input
         value={expandedKeysInput}
         onChange={(e) => {

@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import classnames from "classnames"
+import './style.less'
 type TreeData = NodeData[]
 
 interface TreeProps {
@@ -34,7 +35,7 @@ function Tree({
   )
 }
 
-interface NodeData {
+export interface NodeData {
   key: string
   title: string
   children?: NodeData[]

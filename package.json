@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "parcel src/index.html"
+    "dev": "parcel src/index.html",
+    "toc": "parcel example/toc/index.html"
   },
   "author": "",
   "license": "ISC",
