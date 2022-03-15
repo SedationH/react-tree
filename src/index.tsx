@@ -44,10 +44,16 @@ const Index = () => {
   const [selectedKeysInput, setSelectedKeysInput] = useState("0 1")
   const [expandedKeysInput, setExpandedKeysInput] = useState("0 0-1")
   const [selectedKeys, setSelectedKeys] = useState([])
+  const [expandedKeys, setExpandedKeys] = useState([])
 
   const onSelect = (keys, { node }) => {
     log("Index onSelect", keys)
     setSelectedKeys(keys)
+  }
+
+  const onExpand = (keys, { node }) => {
+    log("Index onExpand", keys)
+    setExpandedKeys(keys)
   }
 
   return (
@@ -74,6 +80,8 @@ const Index = () => {
         data={treeData}
         onSelect={onSelect}
         // selectedKeys={selectedKeys}
+        onExpand={onExpand}
+        expandedKeys={expandedKeys}
       />
     </div>
   )
