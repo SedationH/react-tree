@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import ReactDOM from "react-dom"
+import { log } from "./debug"
 import Tree, { TreeData } from "./Tree"
 
 const treeData: TreeData = [
@@ -40,8 +41,15 @@ const treeData: TreeData = [
 ]
 
 const Index = () => {
-  const [selectedKeysInput, setSelectedKeysInput] = useState("0 0-1-0 1")
+  const [selectedKeysInput, setSelectedKeysInput] = useState("0 1")
   const [expandedKeysInput, setExpandedKeysInput] = useState("0 0-1")
+  const [selectedKeys, setSelectedKeys] = useState([])
+
+  const onSelect = (keys, { node }) => {
+    log("Index onSelect", keys)
+    setSelectedKeys(keys)
+  }
+
   return (
     <div>
       Tree Component
@@ -64,6 +72,8 @@ const Index = () => {
         defaultExpandedKeys={expandedKeysInput.split(" ")}
         defaultSelectedKeys={selectedKeysInput.split(" ")}
         data={treeData}
+        onSelect={onSelect}
+        // selectedKeys={selectedKeys}
       />
     </div>
   )

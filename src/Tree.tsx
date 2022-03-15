@@ -1,7 +1,12 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import classnames from "classnames"
-import './style.less'
+import "./style.less"
+import { log } from "./debug"
 type TreeData = NodeData[]
+
+function deleteKeyFromArray(key: string, array: string[]) {
+  return array.filter((keyFromArray) => keyFromArray !== key)
+}
 
 interface TreeProps {
   data: TreeData
@@ -9,17 +14,48 @@ interface TreeProps {
   expandedKeys?: string[]
   defaultExpandedKeys?: string[]
   defaultSelectedKeys?: string[]
+  onSelect?: (keys: string[], { node: NodeData }) => void
 }
 
 function Tree({
   data = [],
-  selectedKeys,
-  expandedKeys,
+  selectedKeys: selectedKeysFromProps,
+  expandedKeys: expandedKeysFromProps,
   defaultExpandedKeys = [],
   defaultSelectedKeys = [],
+  onSelect,
 }: TreeProps) {
-  selectedKeys = [...defaultSelectedKeys]
-  expandedKeys = [...defaultExpandedKeys]
+  const [selectedKeys, setSelectedKeys] = useState(
+    selectedKeysFromProps || defaultSelectedKeys
+  )
+  const [expandedKeys, setExpandedKeys] = useState(
+    expandedKeysFromProps || defaultExpandedKeys
+  )
+
+  useEffect(() => {
+    // 处理 selectedKeysFromProps 的 变化
+    // 也要防止第一次变为 undefined
+    selectedKeysFromProps && setSelectedKeys(selectedKeysFromProps)
+    log("selectedKeysFromProps useEffect", {
+      expandedKeysFromProps,
+      selectedKeys,
+    })
+  }, [selectedKeysFromProps])
+
+  const onTreeSelect: (
+    key: string,
+    { selected: bool, node: NodeData }
+  ) => void = (key, { selected, node }) => {
+    const keys = selected
+      ? selectedKeys.concat(key)
+      : deleteKeyFromArray(key, selectedKeys)
+    onSelect?.(keys, { node })
+
+    // 如果外界没有传入 selectedKeysFromProps 状态需要自己维护
+    if (!selectedKeysFromProps) {
+      setSelectedKeys(keys)
+    }
+  }
 
   return (
     <div className="tree">
@@ -29,6 +65,7 @@ function Tree({
           data={nodeData}
           selectedKeys={selectedKeys}
           expandedKeys={expandedKeys}
+          onSelect={onTreeSelect}
         />
       ))}
     </div>
@@ -45,31 +82,38 @@ interface TreeNodeProps {
   data: NodeData
   selectedKeys: string[]
   expandedKeys: string[]
+  onSelect?: (key: string, { selected: bool, node: NodeData }) => void
 }
 
-function TreeNode({ data, selectedKeys, expandedKeys }: TreeNodeProps) {
+function TreeNode({
+  data,
+  selectedKeys,
+  expandedKeys,
+  onSelect,
+}: TreeNodeProps) {
   const hasChildren = data.children?.length ? true : false
-  const [expanded, setExpanded] = useState(expandedKeys?.includes(data.key))
-  const [selected, setSelected] = useState(selectedKeys?.includes(data.key))
+  const selected = selectedKeys?.includes(data.key)
+  const expanded = expandedKeys?.includes(data.key)
 
-  const onExpand = () => {
-    setExpanded(!expanded)
+  const onNodeSelect = () => {
+    onSelect?.(data.key, {
+      selected: !selected,
+      node: data,
+    })
   }
 
-  const onSelect = () => {
-    setSelected(!selected)
-  }
+  const onNodeExpand = () => {}
 
   return (
     <div className="tree-node">
       <div className="content">
         {hasChildren && (
-          <div onClick={onExpand} className="switcher">
+          <div onClick={onNodeExpand} className="switcher">
             {expanded ? "-" : "+"}
           </div>
         )}
         <div
-          onClick={onSelect}
+          onClick={onNodeSelect}
           className={classnames("title", {
             active: selected,
           })}
@@ -85,6 +129,7 @@ function TreeNode({ data, selectedKeys, expandedKeys }: TreeNodeProps) {
             key={nodeData.key}
             selectedKeys={selectedKeys}
             expandedKeys={expandedKeys}
+            onSelect={onSelect}
           />
         ))}
     </div>
