@@ -6,6 +6,8 @@ import {
 } from "./preprocess"
 import { initTOCDisplayComponent } from "./ui"
 
+
+// TODO: 曝光时长统计 -> 颜色
 class TOC {
   options: any
   tokenDOMs: HTMLElement[]

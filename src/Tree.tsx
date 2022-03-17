@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import classnames from "classnames"
 import "./style.less"
 import { log } from "./debug"
+import HasChildrenIcon from "./HasChildrenIcon"
 type TreeData = NodeData[]
 
 function deleteKeyFromArray(key: string, array: string[]) {
@@ -152,7 +153,15 @@ function TreeNode({
       <div className="content">
         {hasChildren && (
           <div onClick={onNodeExpand} className="switcher">
-            {expanded ? "-" : "+"}
+            {expanded ? (
+              <HasChildrenIcon />
+            ) : (
+              <HasChildrenIcon
+                style={{
+                  transform: "rotate(-90deg)",
+                }}
+              />
+            )}
           </div>
         )}
         <div

@@ -62,6 +62,7 @@ function TOCDisplayComponent({
         setExpandedKeys(getKeyArray(key))
       })
     )
+    // TODO: 处理类型问题
     iterateNestedTokenDOMs(treeData, (nestedTokenDOM) => {
       observer.observe(nestedTokenDOM.dom)
     })
