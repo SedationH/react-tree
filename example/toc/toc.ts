@@ -16,7 +16,8 @@ class TOC {
 
     const nestedTokenDOMs = buildNestedTokenDOMs(tokenDOMs)
     const treeData = this.adaptTreeDataFromNestedTokenDOMs(nestedTokenDOMs)
-    initTOCDisplayComponent(treeData)
+    const DOM2keyMap = this.getDOM2keyMap(nestedTokenDOMs)
+    initTOCDisplayComponent(treeData, DOM2keyMap)
   }
 
   adaptTreeDataFromNestedTokenDOMs(
@@ -24,10 +25,18 @@ class TOC {
   ): TreeData {
     return iterateNestedTokenDOMs<NodeData>(
       nestedTokenDOMs,
-      (nestedTokenDOMs) => {
-        nestedTokenDOMs.title = nestedTokenDOMs.dom.textContent
+      (nestedTokenDOM) => {
+        nestedTokenDOM.title = nestedTokenDOM.dom.textContent
       }
     )
+  }
+
+  getDOM2keyMap(nestedTokenDOMs: NestedTokenDOM[]) {
+    const map = new Map()
+    iterateNestedTokenDOMs(nestedTokenDOMs, (nestedTokenDOM) => {
+      map.set(nestedTokenDOM.dom, nestedTokenDOM.key)
+    })
+    return map
   }
 
   remove() {}

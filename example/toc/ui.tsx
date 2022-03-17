@@ -1,13 +1,84 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import ReactDOM from "react-dom"
-import Tree from "../../src/Tree"
+import { log } from "../../src/debug"
+import Tree, { NodeData, TreeData } from "../../src/Tree"
+import { iterateNestedTokenDOMs, NestedTokenDOM } from "./preprocess"
 import "./style.less"
 
-function TOCDisplayComponent({ treeData }) {
-  console.log(treeData)
+export function getKeyArray(key) {
+  const arr = key.split("-")
+  const len = arr.length
+  const keyArray = []
+  for (let end = 1; end <= len; end++) {
+    keyArray.push(arr.slice(0, end).join("-"))
+  }
+
+  return keyArray
+}
+
+function TOCDisplayComponent({
+  treeData,
+  DOM2keyMap,
+}: {
+  treeData: TreeData
+  DOM2keyMap: Map<Element, string>
+}) {
+  const handleSelect = (
+    keys,
+    {
+      node,
+    }: {
+      node: NodeData & NestedTokenDOM
+    }
+  ) => {
+    log("TOCDisplayComponent handleSelect", { node })
+    node.dom.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    })
+    setSelectedKeys(keys)
+  }
+
+  const handleExpand = (keys, { node }) => {
+    log("TOCDisplayComponent handleExpand", { node })
+    node.dom.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    })
+    setExpandedKeys(keys)
+  }
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) =>
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return
+        const key = DOM2keyMap.get(entry.target)
+        log("useEffect IntersectionObserver callback", {
+          entry,
+          key,
+        })
+
+        setSelectedKeys(getKeyArray(key))
+        setExpandedKeys(getKeyArray(key))
+      })
+    )
+    iterateNestedTokenDOMs(treeData, (nestedTokenDOM) => {
+      observer.observe(nestedTokenDOM.dom)
+    })
+  }, [])
+
+  const [selectedKeys, setSelectedKeys] = useState([])
+  const [expandedKeys, setExpandedKeys] = useState([])
+
   return (
     <div>
-      <Tree data={treeData} />
+      <Tree
+        expandedKeys={expandedKeys}
+        selectedKeys={selectedKeys}
+        data={treeData}
+        onSelect={handleSelect}
+        onExpand={handleExpand}
+      />
     </div>
   )
 }
@@ -18,12 +89,15 @@ let $root: HTMLElement
 const ROOT_ID = "awesome-toc-root"
 // const CSS_ID = "awesome-toc-css"
 
-function initTOCDisplayComponent(treeData) {
+function initTOCDisplayComponent(treeData, DOM2keyMap) {
   $root = document.createElement("div")
   $root.id = ROOT_ID
   document.body.append($root)
 
-  ReactDOM.render(<TOCDisplayComponent treeData={treeData} />, $root)
+  ReactDOM.render(
+    <TOCDisplayComponent DOM2keyMap={DOM2keyMap} treeData={treeData} />,
+    $root
+  )
 }
 
 export { initTOCDisplayComponent }

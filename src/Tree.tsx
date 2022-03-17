@@ -63,6 +63,8 @@ function Tree({
       : deleteKeyFromArray(key, selectedKeys)
     onSelect?.(keys, { node })
 
+    log("onTreeSelect", keys)
+
     // 如果外界没有传入 selectedKeysFromProps 状态需要自己维护
     if (!selectedKeysFromProps) {
       setSelectedKeys(keys)
@@ -78,11 +80,15 @@ function Tree({
       : deleteKeyFromArray(key, expandedKeys)
     onExpand?.(keys, { node })
 
+    log("onTreeExpand", keys)
+
     // 如果外界没有传入 expandedKeysFromProps 状态需要自己维护
     if (!expandedKeysFromProps) {
       setExpandedKeys(keys)
     }
   }
+
+  log("Tree render", { selectedKeys, expandedKeys })
 
   return (
     <div className="tree">
@@ -126,6 +132,7 @@ function TreeNode({
   const expanded = expandedKeys?.includes(data.key)
 
   const onNodeSelect = () => {
+    log("onNodeSelect", { selected: !expanded, data, key: data.key })
     onSelect(data.key, {
       selected: !selected,
       node: data,
