@@ -28,6 +28,10 @@
         }
       }
 
+      .switcher-placeholder {
+        width: 24px;
+      }
+
       .title-wrapper {
         padding: 0 4px;
         border-radius: 2px;
@@ -43,6 +47,17 @@
         &.selected {
           background-color: #bae7ff;
         }
+      }
+    }
+
+    .children-wrapper {
+      transition: max-height, 0.3s;
+      max-height: 0;
+      overflow: auto;
+
+      &.expanded {
+        display: block;
+        max-height: 200px;
       }
     }
   }
