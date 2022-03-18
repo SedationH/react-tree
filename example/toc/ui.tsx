@@ -41,10 +41,6 @@ function TOCDisplayComponent({
 
   const handleExpand = (keys, { node }) => {
     log("TOCDisplayComponent handleExpand", { node })
-    node.dom.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    })
     setExpandedKeys(keys)
   }
 

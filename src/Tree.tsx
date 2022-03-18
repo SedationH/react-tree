@@ -153,26 +153,23 @@ function TreeNode({
       <div className="content">
         {hasChildren && (
           <div onClick={onNodeExpand} className="switcher">
-            {expanded ? (
-              <HasChildrenIcon />
-            ) : (
-              <HasChildrenIcon
-                style={{
-                  transform: "rotate(-90deg)",
-                }}
-              />
-            )}
+            <HasChildrenIcon
+              className={classnames("switcher-icon", {
+                expanded,
+              })}
+            />
           </div>
         )}
         <div
-          onClick={onNodeSelect}
-          className={classnames("title", {
-            active: selected,
+          className={classnames("title-wrapper", {
+            selected: selected,
           })}
+          onClick={onNodeSelect}
         >
-          {data.title}
+          <span className="title">{data.title}</span>
         </div>
       </div>
+      {/* TODO: 不必要的重复运算 */}
       {hasChildren &&
         expanded &&
         data.children.map((nodeData) => (

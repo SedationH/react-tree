@@ -1,13 +1,14 @@
 import React from "react"
 
-function HasChildrenIcon({ style = {} }) {
+function HasChildrenIcon({ style = {}, className = "" }) {
   return (
     <svg
       style={{
-        width: "1em",
-        height: "1em",
+        width: "14px",
+        height: "14px",
         ...style,
       }}
+      className={className}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1024 1024"
     >

@@ -3,21 +3,47 @@
     padding-left: 1em;
 
     .content {
+      line-height: 24px;
       display: flex;
+      align-items: stretch;
+      padding-bottom: 2px;
 
       .switcher {
         cursor: pointer;
         user-select: none;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+
+        .switcher-icon {
+          transition-property: transform;
+          transition-duration: 0.3s;
+          transform: rotate(-90deg);
+
+          &.expanded {
+            transform: rotate(0deg);
+          }
+        }
       }
 
-      & > div {
-        margin-right: 0.5em;
+      .title-wrapper {
+        padding: 0 4px;
+        border-radius: 2px;
+        cursor: pointer;
+
+        transition-property: background-color;
+        transition-duration: 0.3s;
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+
+        &.selected {
+          background-color: #bae7ff;
+        }
       }
-    }
-  }
-  .title {
-    &.active {
-      color: red;
     }
   }
 }
