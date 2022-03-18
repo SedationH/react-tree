@@ -45,23 +45,31 @@ function TOCDisplayComponent({
   }
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) =>
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return
-        const key = DOM2keyMap.get(entry.target)
-        log("useEffect IntersectionObserver callback", {
-          entry,
-          key,
-        })
+    const observer = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          const key = DOM2keyMap.get(entry.target)
+          log("useEffect IntersectionObserver callback", {
+            entry,
+            key,
+          })
 
-        setSelectedKeys(getKeyArray(key))
-        setExpandedKeys(getKeyArray(key))
-      })
+          setSelectedKeys(getKeyArray(key))
+          setExpandedKeys(getKeyArray(key))
+        }),
+      {
+        rootMargin: "0px 0px -85% 0px",
+      }
     )
     // TODO: 处理类型问题
     iterateNestedTokenDOMs(treeData, (nestedTokenDOM) => {
       observer.observe(nestedTokenDOM.dom)
     })
+
+    return () => {
+      observer.disconnect()
+    }
   }, [])
 
   const [selectedKeys, setSelectedKeys] = useState([])
