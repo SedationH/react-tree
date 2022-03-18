@@ -1,4 +1,4 @@
-const isDebugging = true
+const isDebugging = false
 
 const log = (...args) => {
   if (!isDebugging) return

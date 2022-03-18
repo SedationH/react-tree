@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react"
 import classnames from "classnames"
-import "./style.less"
 import { log } from "./debug"
 import HasChildrenIcon from "./HasChildrenIcon"
+import style from "./style.module.less"
+
 type TreeData = NodeData[]
 
 function deleteKeyFromArray(key: string, array: string[]) {
@@ -92,7 +93,7 @@ function Tree({
   log("Tree render", { selectedKeys, expandedKeys })
 
   return (
-    <div className="tree">
+    <div className={style.tree}>
       {data.map((nodeData) => (
         <TreeNode
           key={nodeData.key}
@@ -149,31 +150,31 @@ function TreeNode({
   }
 
   return (
-    <div className="tree-node">
-      <div className="content">
+    <div className={style["tree-node"]}>
+      <div className={style["content"]}>
         {hasChildren ? (
-          <div onClick={onNodeExpand} className="switcher">
+          <div onClick={onNodeExpand} className={style["switcher"]}>
             <HasChildrenIcon
-              className={classnames("switcher-icon", {
-                expanded,
+              className={classnames(style["switcher-icon"], {
+                [style["expanded"]]: expanded,
               })}
             />
           </div>
         ) : (
-          <div className="switcher-placeholder"></div>
+          <div className={style["switcher-placeholder"]}></div>
         )}
         <div
-          className={classnames("title-wrapper", {
-            selected: selected,
+          className={classnames(style["title-wrapper"], {
+            [style["selected"]]: selected,
           })}
           onClick={onNodeSelect}
         >
-          <span className="title">{data.title}</span>
+          <span className={style["title"]}>{data.title}</span>
         </div>
       </div>
       <div
-        className={classnames("children-wrapper", {
-          expanded,
+        className={classnames(style["children-wrapper"], {
+          [style["expanded"]]: expanded,
         })}
       >
         {data.children.map((nodeData) => (
