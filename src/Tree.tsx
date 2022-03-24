@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react"
-import classnames from "classnames"
-import { log } from "./debug"
-import HasChildrenIcon from "./HasChildrenIcon"
-import style from "./style.module.less"
+import React, { useEffect, useState } from 'react';
+import classnames from 'classnames';
+import HasChildrenIcon from './HasChildrenIcon';
 
-type TreeData = NodeData[]
+type TreeData = NodeData[];
 
 function deleteKeyFromArray(key: string, array: string[]) {
-  return array.filter((keyFromArray) => keyFromArray !== key)
+  return array.filter((keyFromArray) => keyFromArray !== key);
 }
 
 interface TreeProps {
-  data: TreeData
-  selectedKeys?: string[]
-  expandedKeys?: string[]
-  defaultExpandedKeys?: string[]
-  defaultSelectedKeys?: string[]
-  onSelect?: (keys: string[], { node: NodeData }) => void
-  onExpand?: (keys: string[], { node: NodeData }) => void
+  data: TreeData;
+  selectedKeys?: string[];
+  expandedKeys?: string[];
+  defaultExpandedKeys?: string[];
+  defaultSelectedKeys?: string[];
+  onSelect?: (keys: string[], { node }: { node: NodeData }) => void;
+  onExpand?: (keys: string[], { node }: { node: NodeData }) => void;
 }
+
+const prefixCls = 'sedationh';
 
 function Tree({
   data = [],
@@ -29,71 +29,61 @@ function Tree({
   onSelect,
   onExpand,
 }: TreeProps) {
-  const [selectedKeys, setSelectedKeys] = useState(
-    selectedKeysFromProps || defaultSelectedKeys
-  )
-  const [expandedKeys, setExpandedKeys] = useState(
-    expandedKeysFromProps || defaultExpandedKeys
-  )
+  const [selectedKeys, setSelectedKeys] = useState(selectedKeysFromProps || defaultSelectedKeys);
+  const [expandedKeys, setExpandedKeys] = useState(expandedKeysFromProps || defaultExpandedKeys);
 
   useEffect(() => {
     // 处理 selectedKeysFromProps 的 变化
     // 也要防止第一次变为 undefined
-    selectedKeysFromProps && setSelectedKeys(selectedKeysFromProps)
-    log("selectedKeysFromProps useEffect", {
-      expandedKeysFromProps,
-      selectedKeys,
-    })
-  }, [selectedKeysFromProps])
+    selectedKeysFromProps && setSelectedKeys(selectedKeysFromProps);
+  }, [selectedKeysFromProps]);
 
   useEffect(() => {
     // 处理 expandedKeysFromProps 的 变化
     // 也要防止第一次变为 undefined
-    expandedKeysFromProps && setExpandedKeys(expandedKeysFromProps)
-    log("expandedKeysFromProps useEffect", {
-      expandedKeysFromProps,
-      expandedKeys,
-    })
-  }, [expandedKeysFromProps])
+    expandedKeysFromProps && setExpandedKeys(expandedKeysFromProps);
+  }, [expandedKeysFromProps]);
 
   const onTreeSelect: (
     key: string,
-    { selected: bool, node: NodeData }
+    {
+      selected,
+      node,
+    }: {
+      selected: boolean;
+      node: NodeData;
+    },
   ) => void = (key, { selected, node }) => {
-    const keys = selected
-      ? selectedKeys.concat(key)
-      : deleteKeyFromArray(key, selectedKeys)
-    onSelect?.(keys, { node })
-
-    log("onTreeSelect", keys)
+    const keys = selected ? selectedKeys.concat(key) : deleteKeyFromArray(key, selectedKeys);
+    onSelect?.(keys, { node });
 
     // 如果外界没有传入 selectedKeysFromProps 状态需要自己维护
     if (!selectedKeysFromProps) {
-      setSelectedKeys(keys)
+      setSelectedKeys(keys);
     }
-  }
+  };
 
   const onTreeExpand: (
     key: string,
-    { expanded: bool, node: NodeData }
+    {
+      expanded,
+      node,
+    }: {
+      expanded: boolean;
+      node: NodeData;
+    },
   ) => void = (key, { expanded, node }) => {
-    const keys = expanded
-      ? expandedKeys.concat(key)
-      : deleteKeyFromArray(key, expandedKeys)
-    onExpand?.(keys, { node })
-
-    log("onTreeExpand", keys)
+    const keys = expanded ? expandedKeys.concat(key) : deleteKeyFromArray(key, expandedKeys);
+    onExpand?.(keys, { node });
 
     // 如果外界没有传入 expandedKeysFromProps 状态需要自己维护
     if (!expandedKeysFromProps) {
-      setExpandedKeys(keys)
+      setExpandedKeys(keys);
     }
-  }
-
-  log("Tree render", { selectedKeys, expandedKeys })
+  };
 
   return (
-    <div className={style.tree}>
+    <div className={classnames(prefixCls, 'tree')}>
       {data.map((nodeData) => (
         <TreeNode
           key={nodeData.key}
@@ -105,79 +95,80 @@ function Tree({
         />
       ))}
     </div>
-  )
+  );
 }
 
 export interface NodeData {
-  key: string
-  title: string
-  children?: NodeData[]
+  key: string;
+  title: string;
+  children?: NodeData[];
 }
 
 interface TreeNodeProps {
-  data: NodeData
-  selectedKeys: string[]
-  expandedKeys: string[]
-  onSelect: (key: string, { selected: bool, node: NodeData }) => void
-  onExpand: (key: string, { expanded: bool, node: NodeData }) => void
+  data: NodeData;
+  selectedKeys: string[];
+  expandedKeys: string[];
+  onSelect: (
+    key: string,
+    {
+      selected,
+      node,
+    }: {
+      selected: boolean;
+      node: NodeData;
+    },
+  ) => void;
+  onExpand: (key: string, { expanded, node }: { expanded: boolean; node: NodeData }) => void;
 }
 
-function TreeNode({
-  data,
-  selectedKeys,
-  expandedKeys,
-  onSelect,
-  onExpand,
-}: TreeNodeProps) {
-  const hasChildren = data.children?.length ? true : false
-  const selected = selectedKeys?.includes(data.key)
-  const expanded = expandedKeys?.includes(data.key)
+function TreeNode({ data, selectedKeys, expandedKeys, onSelect, onExpand }: TreeNodeProps) {
+  const hasChildren = data.children?.length ? true : false;
+  const selected = selectedKeys?.includes(data.key);
+  const expanded = expandedKeys?.includes(data.key);
 
   const onNodeSelect = () => {
-    log("onNodeSelect", { selected: !expanded, data, key: data.key })
     onSelect(data.key, {
       selected: !selected,
       node: data,
-    })
-  }
+    });
+  };
 
   const onNodeExpand = () => {
-    log("onNodeExpand", { expanded: !expanded, data, key: data.key })
     onExpand(data.key, {
       expanded: !expanded,
       node: data,
-    })
-  }
+    });
+  };
 
   return (
-    <div className={style["tree-node"]}>
-      <div className={style["content"]}>
+    <div className="tree-node">
+      <div className="content">
         {hasChildren ? (
-          <div onClick={onNodeExpand} className={style["switcher"]}>
+          <div onClick={onNodeExpand} className="switcher">
             <HasChildrenIcon
-              className={classnames(style["switcher-icon"], {
-                [style["expanded"]]: expanded,
+              className={classnames('switcher-icon', {
+                expanded: expanded,
               })}
             />
           </div>
         ) : (
-          <div className={style["switcher-placeholder"]}></div>
+          <div className="switcher-placeholder"></div>
         )}
         <div
-          className={classnames(style["title-wrapper"], {
-            [style["selected"]]: selected,
+          className={classnames('title-wrapper', {
+            selected: selected,
           })}
           onClick={onNodeSelect}
         >
-          <span className={style["title"]}>{data.title}</span>
+          <span className="title">{data.title}</span>
         </div>
       </div>
       <div
-        className={classnames(style["children-wrapper"], {
-          [style["expanded"]]: expanded,
+        className={classnames('children-wrapper', {
+          expanded: expanded,
         })}
       >
-        {data.children.map((nodeData) => (
+        {data.children?.map((nodeData) => (
           <TreeNode
             data={nodeData}
             key={nodeData.key}
@@ -189,8 +180,8 @@ function TreeNode({
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default Tree
-export { TreeData }
+export default Tree;
+export { TreeData };
