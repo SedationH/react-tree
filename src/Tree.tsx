@@ -168,16 +168,18 @@ function TreeNode({ data, selectedKeys, expandedKeys, onSelect, onExpand }: Tree
           expanded: expanded,
         })}
       >
-        {data.children?.map((nodeData) => (
-          <TreeNode
-            data={nodeData}
-            key={nodeData.key}
-            selectedKeys={selectedKeys}
-            expandedKeys={expandedKeys}
-            onSelect={onSelect}
-            onExpand={onExpand}
-          />
-        ))}
+        <div className="children">
+          {data.children?.map((nodeData) => (
+            <TreeNode
+              data={nodeData}
+              key={nodeData.key}
+              selectedKeys={selectedKeys}
+              expandedKeys={expandedKeys}
+              onSelect={onSelect}
+              onExpand={onExpand}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

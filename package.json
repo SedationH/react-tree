@@ -1,12 +1,14 @@
 {
-  "private": true,
   "name": "@sedationh/react-tree",
-  "version": "1.0.0",
+  "version": "0.0.1",
+  "files": [
+    "lib","es","assets"
+  ],
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
     "docs:deploy": "gh-pages -d docs-dist",
-    "build": "father-build && lessc assets/style.less assets/style.css",
+    "build": "father-build && lessc src/assets/style.less assets/style.css",
     "deploy": "npm run docs:build && npm run docs:deploy",
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
     "test": "umi-test",

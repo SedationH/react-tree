@@ -1,4 +1,4 @@
-# sedationh@react-tree
+# @sedationh/react-tree
 
 预期
 
