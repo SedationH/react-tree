@@ -61,18 +61,18 @@
       height: 0;
       overflow: hidden;
 
-      .@{prefix}-tree-node-children {
-        transform: translateY(-100%);
-        transition: transform, 0.3s;
-      }
-
       &.expanded {
         height: auto;
-
-        .@{prefix}-tree-node-children {
-          transform: translateY(0);
-        }
       }
+
+      &.expanded > .@{prefix}-tree-node-children {
+        transform: translateY(0);
+      }
+    }
+
+    .@{prefix}-tree-node-children {
+      transform: translateY(-100%);
+      transition: transform, 0.3s;
     }
   }
 }
