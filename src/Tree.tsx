@@ -18,7 +18,7 @@ interface TreeProps {
   onExpand?: (keys: string[], { node }: { node: NodeData }) => void;
 }
 
-const prefixCls = 'sedationh';
+const prefix = 'sedationh';
 
 function Tree({
   data = [],
@@ -83,7 +83,7 @@ function Tree({
   };
 
   return (
-    <div className={classnames(prefixCls, 'tree')}>
+    <div className={classnames(`${prefix}-tree`)}>
       {data.map((nodeData) => (
         <TreeNode
           key={nodeData.key}
@@ -141,34 +141,34 @@ function TreeNode({ data, selectedKeys, expandedKeys, onSelect, onExpand }: Tree
   };
 
   return (
-    <div className="tree-node">
-      <div className="content">
+    <div className={`${prefix}-tree-node`}>
+      <div className={`${prefix}-tree-node-content`}>
         {hasChildren ? (
-          <div onClick={onNodeExpand} className="switcher">
+          <div onClick={onNodeExpand} className={`${prefix}-tree-node-content-switcher`}>
             <HasChildrenIcon
-              className={classnames('switcher-icon', {
+              className={classnames(`${prefix}-tree-node-content-switcher-icon`, {
                 expanded: expanded,
               })}
             />
           </div>
         ) : (
-          <div className="switcher-placeholder"></div>
+          <div className={`${prefix}-tree-node-content-switcher-placeholder`}></div>
         )}
         <div
-          className={classnames('title-wrapper', {
+          className={classnames(`${prefix}-tree-node-content-title`, {
             selected: selected,
           })}
           onClick={onNodeSelect}
         >
-          <span className="title">{data.title}</span>
+          {data.title}
         </div>
       </div>
       <div
-        className={classnames('children-wrapper', {
+        className={classnames(`${prefix}-tree-node-children-wrapper`, {
           expanded: expanded,
         })}
       >
-        <div className="children">
+        <div className={`${prefix}-tree-node-children`}>
           {data.children?.map((nodeData) => (
             <TreeNode
               data={nodeData}

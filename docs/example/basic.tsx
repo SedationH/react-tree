@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Tree, { TreeData } from '@sedationh/react-tree';
-import '../../assets/style.css';
+import '../../src/assets/style.less';
 
 const treeData: TreeData = [
   {
